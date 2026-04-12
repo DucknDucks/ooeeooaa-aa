@@ -14,12 +14,12 @@ using namespace std;
 
 class boolop{
 public:
-    virtual string nameget() const = 0;
-    virtual bool eval(bool a, bool b) const{return false;}
-    virtual string explanget() const = 0;
-    virtual bool noteval(bool a)const{return false;}
-    virtual bool isnot() const{return false;}
-    virtual ~boolop(){}
+    virtual string nameget() const = 0; //this will just name the operators, and, or, nor etc
+    virtual bool eval(bool a, bool b) const{return false;} //this will just take 2 inputs and evaluate the operator
+    virtual string explanget() const = 0; //this will explain what the operator does
+    virtual bool noteval(bool a)const{return false;} //this is for not only basically, reads 1 input
+    virtual bool isnot() const{return false;} //this is just to check whether the operator is not
+    virtual ~boolop(){} //classic lil destructor
 };
 
 class AND : public boolop{
@@ -27,7 +27,6 @@ class AND : public boolop{
     string explanget() const override{
         return "AND  : True only if BOTH inputs are true.(0 AND 0=0, 1 AND 0=0, 1 AND 1=1)";}
     bool eval(bool a, bool b) const override {return a&&b;}
-
 };
 
 class OR : public boolop{
@@ -42,7 +41,6 @@ class XOR : public boolop{
     string explanget() const override{
         return "XOR  : True if exactly ONE input is true. (0 XOR 0=0, 1 XOR 0=1, 1 XOR 1=0)";}
     bool eval(bool a, bool b) const override {return a != b;}
-
 };  
 
 class NOT : public boolop{
@@ -72,13 +70,36 @@ class NOR : public boolop{
     bool eval(bool a, bool b) const override {return !(a || b);}   
 };
 
+string uppercase(string str){
+    for (int i = 0; i<(int)str.size(); i++){ //this is just to convert the input to uppercase, so turning "and" into "AND" so forth and so on
+        if (str[i]>='a' && str[i]<='z'){
+            str[i] = str[i]-32;
+        }   
+    }
+    return str;
+}
+
+bool containsop(const string& stri, const string&word){
+    size_t pos = stri.find(word);
+    while (pos != string::npos){    //this is to check if the input has an operator in it, it also makes the distinction between AND in NAND, so it basically checks if the word is surrounded by non-alphabetic characters or is at the start/end of the string that sort of thing
+        bool before = (pos == 0) || !isalpha(stri[pos - 1]);
+        bool after = (pos + word.size() >= stri.size()) || !isalpha(stri[pos + word.size()]);
+        if (before && after){
+            return true;
+        }
+        pos = stri.find(word, pos + 1);
+    }
+    return false;
+}
+
 class boolexpression{
 private:
     string expression;
-    bool a, b, c;
+    bool a, b, c;   //this is a wip
     vector<string> opsfound;
 public:
-}
+
+};
 
 
 int main(){
