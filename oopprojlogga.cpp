@@ -23,28 +23,63 @@ public:
 };
 
 class AND : public boolop{
+    string nameget() const override {return "AND";}
+    string explanget() const override{
+        return "AND  : True only if BOTH inputs are true.(0 AND 0=0, 1 AND 0=0, 1 AND 1=1)";}
+    bool eval(bool a, bool b) const override {return a&&b;}
 
 };
 
 class OR : public boolop{
-
+    string  nameget() const override {return "OR";}
+    string explanget() const override{
+        return "OR   : True if at least ONE input is true.(0 OR 0=0, 1 OR 0=1, 1 OR 1=1)";}
+    bool eval(bool a, bool b) const override {return a||b;}
 };
 
 class XOR : public boolop{
+    string nameget() const override {return "XOR";}
+    string explanget() const override{
+        return "XOR  : True if exactly ONE input is true. (0 XOR 0=0, 1 XOR 0=1, 1 XOR 1=0)";}
+    bool eval(bool a, bool b) const override {return a != b;}
 
 };  
 
 class NOT : public boolop{
-
+    string nameget() const override {return "NOT";}
+    string explanget() const override {
+        return "NOT  : Inverts the input. (NOT 0=1, NOT 1=0)";
+    }
+    bool noteval(bool a) const override{
+        return !a;
+    }
+    bool isnot() const override{
+        return true;
+    }
 };
 
 class NAND : public boolop{
-
+    string nameget() const override {return "NAND";}
+    string explanget() const override {
+        return "NAND : True unless BOTH inputs are true. (0 NAND 0=1, 1 NAND 0=1, 1 NAND 1=0)";}
+    bool eval(bool a, bool b) const override {return !(a && b);}
 };
 
 class NOR : public boolop{
-
+    string nameget() const override { return "NOR"; }
+    string explanget() const override {
+        return "NOR  : True only if BOTH inputs are false. (0 NOR 0=1, 1 NOR 0=0, 1 NOR 1=0)";}
+    bool eval(bool a, bool b) const override {return !(a || b);}   
 };
+
+class boolexpression{
+private:
+    string expression;
+    bool a, b, c;
+    vector<string> opsfound;
+public:
+}
+
 
 int main(){
     cout <<"\n><================================================><\n";
