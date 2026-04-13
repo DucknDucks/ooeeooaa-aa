@@ -98,9 +98,61 @@ private:
     bool a, b, c;   //this is a wip
     vector<string> opsfound;
 public:
+    boolexpression(){
+        expression = "";
+        a = b = c = false;
+    }
+    void expressionset(const string&epress){
+        expression = uppercase(epress);
+        a = (expression.find("A") != string::npos);
+        b = (expression.find("B") != string::npos);
+        c = (expression.find("C") != string::npos);
+        opsfound.clear();
+            if (containsop(expression, "AND")){
+                opsfound.push_back("AND");
+        }
+            if (containsop(expression, "OR")){
+                opsfound.push_back("OR");
+        }
+            if (containsop(expression, "XOR")){
+                opsfound.push_back("XOR");
+        }
+            if (containsop(expression, "NOT")){
+                opsfound.push_back("NOT");
+        }
+            if (containsop(expression, "NAND")){
+                opsfound.push_back("NAND");
+        }
+            if (containsop(expression, "NOR")){
+                opsfound.push_back("NOR");
+        }
+            if(int(opsfound.size())>3){
+                cout << "the max operator limit has been exceeded\n";
+            }
+    }
 
+    string epressget() onst{
+        return expression;
+    }
+    bool geta() const{
+        return a;
+    }
+    bool getb()const{
+        return b;
+    }
+    bool getc()const{
+        return c;
+    }
+    vector<string> getfoundops() const{
+        return opsfound;
+    }
+
+    bool evaluate(bool aval, bool bval, bool cval) const{
+        //this is also wip, the idea is to evaluate the expression according to the operators found and the values of a,b,c
+        //but what i plan for it to do is replace the variables with their values and then evaluate the expression based on the operators found
+        return false;
+    }
 };
-
 
 int main(){
     cout <<"\n><================================================><\n";
