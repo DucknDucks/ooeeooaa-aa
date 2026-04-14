@@ -98,11 +98,11 @@ private:
     bool a, b, c;   //this is a wip
     vector<string> opsfound; 
 public:
-    boolexpression() {
+    boolexpression(){
         expression = "";
         a = b = c = false;
     }
-    void setexpression(const string& expr) {
+    void setexpression(const string& expr){
         expression = uppercase(expr);
         a = (expression.find('A') != string::npos);
         b = (expression.find('B') != string::npos);
@@ -115,31 +115,31 @@ public:
         if (containsop(expression, "NOT"))  opsfound.push_back("NOT");
         if (containsop(expression, "XOR"))  opsfound.push_back("XOR");
  
-        if ((int)opsfound.size() > 3) {
+        if ((int)opsfound.size() > 3){
             cout << "[WARNING] More than 3 operators detected. Results may be unexpected.\n";
         }
     }
     
-    string getexpression() const {return expression;}
-    bool geta() const { return a; }
-    bool getb() const { return b; }
-    bool getc() const { return c; }
-    vector<string> getOpsFound() const {return opsfound;}
+    string getexpression() const{return expression;}
+    bool geta() const {return a;}
+    bool getb() const {return b;}
+    bool getc() const {return c;}
+    vector<string> getOpsFound() const{return opsfound;}
   
-    bool evaluate(bool valA, bool valB, bool valC) const {
+    bool evaluate(bool valA, bool valB, bool valC) const{
         vector<string> tokens;
         string current = "";
-        for (int i = 0; i < (int)expression.size(); i++) {
+        for (int i = 0; i < (int)expression.size(); i++){
             char ch = expression[i];
  
             if (ch == ' ') {
-                if (!current.empty()) { tokens.push_back(current); current = ""; }
+                if (!current.empty()) {tokens.push_back(current); current = "";}
             }
-            else if (ch == '(' || ch == ')') {
-                if (!current.empty()) { tokens.push_back(current); current = ""; }
+            else if (ch == '(' || ch == ')'){
+                if (!current.empty()) {tokens.push_back(current); current = "";}
                 tokens.push_back(string(1, ch));
             }
-            else {
+            else{
                 current += ch;
             }
         }
@@ -148,13 +148,13 @@ public:
         vector<bool>   valuestack;
         vector<string> opstack;
         
-        auto applyTop = [&]() {
+        auto applyTop = [&](){
             string op = opstack.back(); opstack.pop_back();
  
-            if (op == "NOT") {
+            if (op == "NOT"){
                 bool a = valuestack.back(); valuestack.pop_back();
                 valuestack.push_back(!a);
-            } else {
+            } else{
                 bool b = valuestack.back(); valuestack.pop_back();
                 bool a = valuestack.back(); valuestack.pop_back();
                 if (op == "AND") valuestack.push_back(a && b);
@@ -165,16 +165,16 @@ public:
             }
         };
  
-        auto precedence = [](const string& op) -> int {
+        auto precedence = [](const string& op) -> int{
             if (op == "NOT")  return 3;
             if (op == "AND" || op == "NAND") return 2;
             return 1;
         };
 
-        for (const string& tok : tokens) {
-            if (tok == "A") { valuestack.push_back(valA); }
-            else if (tok == "B") { valuestack.push_back(valB); }
-            else if (tok == "C") { valuestack.push_back(valC); }
+        for (const string& tok : tokens){
+            if (tok == "A") { valuestack.push_back(valA);}
+            else if (tok == "B") { valuestack.push_back(valB);}
+            else if (tok == "C") { valuestack.push_back(valC);}
             else if (tok == "(") {
                 opstack.push_back("(");
             }
@@ -187,7 +187,7 @@ public:
                 while (!opstack.empty() &&
                        opstack.back() != "(" &&
                        precedence(opstack.back()) >= precedence(tok) &&
-                       tok != "NOT") {  
+                       tok != "NOT"){  
                     applyTop();
                 }
                 opstack.push_back(tok);
@@ -208,7 +208,7 @@ private:
 public:
     TruthTable(boolexpression& e) : expr(e) {}
  
-    void print(ostream& out) const {
+    void print(ostream& out) const{
         bool useA = expr.geta();
         bool useB = expr.getb();
         bool useC = expr.getc();
@@ -231,7 +231,7 @@ public:
         int numRows = 1;
         for (int i = 0; i < numVars; i++) numRows *= 2;
  
-        for (int row = 0; row < numRows; row++) {
+        for (int row = 0; row < numRows; row++){
 
             bool valA = false, valB = false, valC = false;
             int bit = numVars - 1;
@@ -254,6 +254,67 @@ public:
         }
     }
 };
+
+class filehandler{
+public:
+    static void save(const string& filename,boolexpression& expr,TruthTable& table){
+        ofstream file(filename);
+        if (!file.is_open()) {
+            cout << "Could not open file: " << filename << "\n";
+            return;
+        }
+    
+    file << "=== BOOLEAN TRUTH TABLE SIMULATOR ===\n\n";
+    file << "Expression: " << expr.getexpression() << "\n\n";
+    file << "Operators Detected and Explained:\n";
+    
+    vector<string> ops = expr.getOpsFound();
+    for (int i = 0; i < (int)ops.size(); i++){
+        boolop* op = nullptr;
+        if (ops[i] == "AND")  op = new AND();
+        else if (ops[i] == "OR")   op = new OR();
+        else if (ops[i] == "NOT")  op = new NOT();
+        else if (ops[i] == "XOR")  op = new XOR();
+        else if (ops[i] == "NAND") op = new NAND();
+        else if (ops[i] == "NOR")  op = new NOR();
+ 
+        if (op != nullptr){
+            file << "  - " << op->explanget() << "\n";
+            delete op; 
+        }    
+    }    
+    file << "\nTruth Table:\n";
+    table.print(file);
+    file << "\n[Saved by Boolean Truth Table Simulator]\n";
+    file.close();
+    cout << "Saved successfully to '" << filename << "'!\n";
+    }
+    static void load(const string& filename){
+        ifstream file(filename);
+        if (!file.is_open()){
+            cout << "[ERROR] Could not open file: " << filename << "\n";
+            return;
+        }
+ 
+        string line;
+        while (getline(file, line)){
+            cout << line << "\n";
+        }
+        file.close();
+    }
+ 
+    static string readExpression(const string& filename){
+        ifstream file(filename);
+        string line;
+        while (getline(file, line)) {
+            if (line.substr(0, 12) == "Expression: ")
+                return line.substr(12);
+        }
+        return "";
+    }
+};
+
+
 
 int main(){
     cout <<"\n><================================================><\n";
