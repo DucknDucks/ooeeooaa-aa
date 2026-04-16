@@ -320,4 +320,16 @@ int main(){
     cout <<"\n><================================================><\n";
     cout <<"\n               boolean truth table sim              \n";
     cout <<"\n><================================================><\n";
+    int choice = 0;
+    while (true) {
+    cout << "MENU\n";
+        cout << "  1) Enter a new Boolean expression\n";
+        cout << "  2) Load a previously saved file\n";
+        cout << "  3) Exit\n";
+        cout << "Choice: ";
+        cin >> choice;
+        cin.ignore(); 
+        cout << "\n";
+    }
+
 }
