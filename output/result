@@ -1,0 +1,17 @@
+=== BOOLEAN TRUTH TABLE SIMULATOR ===
+
+Expression: NOT C OR A
+
+Operators Detected and Explained:
+  - OR   : True if at least ONE input is true.(0 OR 0=0, 1 OR 0=1, 1 OR 1=1)
+  - NOT  : Inverts the input. (NOT 0=1, NOT 1=0)
+
+Truth Table:
+| A | C | NOT C OR A |
+|---|---|-------------|
+| 0 | 0 |      1     |
+| 0 | 1 |      0     |
+| 1 | 0 |      1     |
+| 1 | 1 |      1     |
+
+[Saved by Boolean Truth Table Simulator]
