@@ -391,7 +391,29 @@ int main(){
     }
         
     else if (choice == 2){
-
+            cout << "Enter filename to load: ";
+            string filename;
+            getline(cin, filename);
+ 
+            cout << "\n--- Contents of '" << filename << "' ---\n\n";
+            filehandler::load(filename);
+            cout << "\nRe-evaluate the expression from this file? (Y/N): ";
+            char reEval;
+            cin >> reEval;
+            cin.ignore();
+ 
+            if (reEval == 'Y' || reEval == 'y') {
+                string loadedExpr = filehandler::readExpression(filename);
+                if (loadedExpr.empty()) {
+                    cout << "[ERROR] Could not find expression in file.\n";
+                } else {
+                    cout << "Re-evaluating: " << loadedExpr << "\n\n";
+                    boolexpression expr;
+                    expr.setexpression(loadedExpr);
+                    TruthTable table(expr);
+                    table.print(cout);
+                }
+            }
     }
 
     else if (choice == 3){
