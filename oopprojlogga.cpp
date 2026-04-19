@@ -313,6 +313,30 @@ public:
         return "";
     }
 };
+void printexplans(boolexpression& expr){
+    vector<string> ops = expr.getOpsFound();
+ 
+    if (ops.empty()){
+        cout << "  (No operators detected)\n";
+        return;
+    }
+ 
+    for (int i = 0; i < (int)ops.size(); i++) {
+        boolop* op = nullptr;
+ 
+        if      (ops[i] == "AND")  op = new AND();
+        else if (ops[i] == "OR")   op = new OR();
+        else if (ops[i] == "NOT")  op = new NOT();
+        else if (ops[i] == "XOR")  op = new XOR();
+        else if (ops[i] == "NAND") op = new NAND();
+        else if (ops[i] == "NOR")  op = new NOR();
+ 
+        if (op != nullptr) {
+            cout << "  - " << op->explanget() << "\n";
+            delete op;
+        }
+    }
+}
 
 
 
@@ -331,5 +355,14 @@ int main(){
         cin.ignore(); 
         cout << "\n";
     }
+
+    if (choice == 1){
+        cout << "Enter Boolean Expression\n";
+        cout << "  Variables : A  B  C\n";
+        cout << "  Operators : AND  OR  NOT  XOR  NAND  NOR\n";
+        cout << "  Max 3 operators. Use brackets for grouping.\n";
+        cout << "  Example   : (A AND B) OR (NOT C)\n";
+        cout << "> ";
+        }
 
 }
